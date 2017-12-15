@@ -1,8 +1,7 @@
-from store import Box
+from random import randint
 
-def sortBoxesByVolume(boxes):
-    return sorted(boxes, key=lambda x: x.v, reverse=True)
+def sortBy(s, t, reverse=True):
+    return sorted(s, key=lambda x: (getattr(x, t[0]), getattr(x, t[1])), reverse=reverse)
 
-def sortBoxesByWidth(boxes):
-    return sorted(boxes, key=lambda x: x.w, reverse=True)
-
+def genarateBoxTuples(n, w_max = 10, h_max = 10):
+    return [(0, 0, randint(1, w_max), randint(1, h_max)) for a in range(n)]

@@ -1,15 +1,25 @@
 from unittest import TestCase
-from utils import sortBoxesByVolume
+from utils import sortBy
 from store import Box, Store
-
+from show import showResults
 boxes_test = [Box((0,0,2,4)), Box((0,0,1,1)),Box((0,0,2,1))]
 
 class TestStore(TestCase):
+    def showStore(self):
+        self.store.boxes = self.store.placed_boxes
+        showResults(self.store)
+
     def setUp(self):
         self.boxes = boxes_test
         self.box = Box((0,0,4,2))
         # domyslnie d = 1
         self.store = Store()
+
+    def testSimplePlaceBoxesBottomLeftFit(self):
+        self.store.boxes = [Box((0,0,1,1)), Box((0,0,1,1)),Box((0,0,1,1))]
+        self.store.placeBoxesBottomLeftFit()
+        expected = [(0,0,1,1), (2,0,1,1), (4,0,1,1)]
+        self.assertCountEqual(expected, [box.getTuple() for box in self.store.placed_boxes])
 
     def testAppendHoles(self):
         self.store.placeBoxBottomLeftFit(self.box)
@@ -22,6 +32,7 @@ class TestStore(TestCase):
         self.store.placed_boxes = [Box((4,0,1,1)),]
         self.store.holes = [(0,0), (4,2), (6,0)]
         self.store.placeBoxBottomLeftFit(self.box)
+        self.store.placed_boxes.append(self.box)
         self.assertEqual(self.box.position, (0,2))
 
     def testBoxNotIntersect(self):
@@ -56,9 +67,4 @@ class TestStore(TestCase):
 
 
 class TestUtils(TestCase):
-
-    def testSortVolume(self):
-        boxes = [Box((0,0,1,1)), Box((0,0,2,1)), Box((0,0,2,4))]
-        expected = [Box((0,0,2,4)), Box((0,0,2,1)),Box((0,0,1,1))]
-        sorted_boxes = sortBoxesByVolume(boxes)
-        self.assertEqual([box.getTuple() for box in expected], [box.getTuple() for box in sorted_boxes])
+    pass
