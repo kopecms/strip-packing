@@ -37,6 +37,10 @@ def showResults(store=Store(width=10, height=10, boxes=boxes_test)):
         x, y = zip(*path.vertices)
         line, = ax.plot(x, y, 'go-')
 
+    # draw holes
+    for hole in store.holes:
+        ax.plot(hole[0], hole[1], 'o')
+    
     ax.grid()
     ax.axis('equal')
     plt.show()

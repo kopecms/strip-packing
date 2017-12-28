@@ -1,5 +1,6 @@
 from utils import sortBy
 
+
 class Store:
     def __init__(self, width=10, height=0, d=1, boxes=None):
         if boxes is None:
@@ -30,14 +31,38 @@ class Store:
 
             if self.checkPlacementConditions(box):
                 del self.holes[i]
-                self.holes.append((box.x + box.w + self.d, box.y))
+                self.moveHoleToRightIfBoxPleced(box)
+                hole_right = (box.x + box.w + self.d, box.y)
+                if not hole_right[0] >= self.width:
+                    self.holes.append(hole_right)
+                # jesli mozliwe to dziure z lewego górnego roku przesuwamy w lewo
                 self.holes.append((box.x, box.y + box.h + self.d))
+                self.holes.append(self.moveHoleToLeftIfPosible((box.x, box.y + box.h + self.d)))
                 return box
         # Jesli wszystkie hole sa zle to znajdujemy najwyzej polozony box_h
         # umieszczamy nasz na (0,box_h.y + box_h.h + self.d)
         self.placed_boxes = sorted(self.placed_boxes, key=lambda x: x.y+x.h, reverse=True)
         highest_box = self.placed_boxes[0]
         box.position = (0, highest_box.y + highest_box.h + self.d)
+
+    def moveHoleToRightIfBoxPleced(self, box):
+        for hole in self.holes:
+            if hole[0] >= box.x and hole[0] < box.x + box.w + self.d and \
+               hole[1] >= box.y and hole[1] < box.y + box.h + self.d:
+                if box.x + box.w + self.d < self.width:
+                    self.holes.append((box.x + box.w + self.d, hole[1]))
+                self.holes.remove(hole)
+
+
+    def moveHoleToLeftIfPosible(self, hole):
+        if hole[0] == 0:
+            return hole
+        else:
+            new_x = 0
+            for b in self.placed_boxes:
+                if b.x + b.w + self.d <= hole[0] and hole[1] >= b.y and hole[1] <= b.y + b.h + self.d:
+                    new_x = b.x + b.w + self.d
+            return (new_x, hole[1])
 
     def checkPlacementConditions(self, box):
         # sprawdza czy box miesci sie w granicach magazynu

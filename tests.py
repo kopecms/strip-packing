@@ -2,7 +2,10 @@ from unittest import TestCase
 from utils import sortBy
 from store import Box, Store
 from show import showResults
+
+
 boxes_test = [Box((0,0,2,4)), Box((0,0,1,1)),Box((0,0,2,1))]
+
 
 class TestStore(TestCase):
     def showStore(self):
@@ -14,6 +17,22 @@ class TestStore(TestCase):
         self.box = Box((0,0,4,2))
         # domyslnie d = 1
         self.store = Store()
+
+    def testMoveToLeftIfPosible(self):
+        self.store.boxes = [Box((0,0,4,4))]
+        self.store.placed_boxes = [Box((0,0,3,3))]
+        self.store.holes = [(4,0),]
+        self.store.placeBoxesBottomLeftFit()
+        expected = [(9, 0), (0, 5), (4, 5)]
+        self.assertCountEqual(expected, [hole for hole in self.store.holes])
+
+    def testMoveToLeftIfPosibleButStopOnOtherBox(self):
+        self.store.boxes = [Box((0,0,1,3))]
+        self.store.placed_boxes = [Box((0,0,3,3)), Box((4,0,2,2))]
+        self.store.holes = [(7,0),]
+        self.store.placeBoxesBottomLeftFit()
+        expected = [(9, 0), (4, 4), (7, 4)]
+        self.assertCountEqual(expected, [hole for hole in self.store.holes])
 
     def testSimplePlaceBoxesBottomLeftFit(self):
         self.store.boxes = [Box((0,0,1,1)), Box((0,0,1,1)),Box((0,0,1,1))]
