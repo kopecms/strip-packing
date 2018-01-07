@@ -17,26 +17,24 @@ class TestStore(TestCase):
         self.box = Box((0,0,4,2))
         # domyslnie d = 1
         self.store = Store()
+        self.store.optimaze = True
 
     def testMoveToLeftIfPosible(self):
-        self.store.boxes = [Box((0,0,4,4))]
         self.store.placed_boxes = [Box((0,0,3,3))]
         self.store.holes = [(4,0),]
-        self.store.placeBoxesBottomLeftFit()
+        self.store.placeBoxesBottomLeftFit([Box((0,0,4,4))])
         expected = [(9, 0), (0, 5), (4, 5)]
         self.assertCountEqual(expected, [hole for hole in self.store.holes])
 
     def testMoveToLeftIfPosibleButStopOnOtherBox(self):
-        self.store.boxes = [Box((0,0,1,3))]
         self.store.placed_boxes = [Box((0,0,3,3)), Box((4,0,2,2))]
         self.store.holes = [(7,0),]
-        self.store.placeBoxesBottomLeftFit()
+        self.store.placeBoxesBottomLeftFit([Box((0,0,1,3))])
         expected = [(9, 0), (4, 4), (7, 4)]
         self.assertCountEqual(expected, [hole for hole in self.store.holes])
 
     def testSimplePlaceBoxesBottomLeftFit(self):
-        self.store.boxes = [Box((0,0,1,1)), Box((0,0,1,1)),Box((0,0,1,1))]
-        self.store.placeBoxesBottomLeftFit()
+        self.store.placeBoxesBottomLeftFit([Box((0,0,1,1)), Box((0,0,1,1)),Box((0,0,1,1))])
         expected = [(0,0,1,1), (2,0,1,1), (4,0,1,1)]
         self.assertCountEqual(expected, [box.getTuple() for box in self.store.placed_boxes])
 
@@ -80,10 +78,14 @@ class TestStore(TestCase):
 
     def testBadPlacment(self):
         self.store.placed_boxes = [Box((0,0,1,1)),Box((2,2,1,1))]
-        
+
         self.assertFalse(self.store.checkPlacementConditions(Box((0,1,1,1))))
         self.assertFalse(self.store.checkPlacementConditions(Box((0,-2,1,1))))
 
+    def testTopBox(self):
+        self.store.placed_boxes = [Box((5,0,1,1)), Box((11,3,2,4)), Box((5,0,2,1))]
+        top_box = self.store.getTopBox()
+        self.assertTrue(top_box == Box((11,3,2,4)))
 
 class TestUtils(TestCase):
     pass

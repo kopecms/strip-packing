@@ -10,6 +10,8 @@ class Store:
         self.boxes = boxes
         self.placed_boxes = []
         self.height = height
+        # jesli True to stosowane sa optymalizacje
+        self.optimaze = False
 
         """
         pomysl mam taki ze do holes trafiaja zawsze po wsaddzeniu boxa:
@@ -19,13 +21,20 @@ class Store:
         """
         self.holes = [(0,0),]
 
-    def placeBoxesBottomLeftFit(self):
-        self.boxes = sortBy(self.boxes, ('w','h'))
-        for box in self.boxes:
+    def getTopBox(self):
+        top_box = self.placed_boxes[0] if self.placed_boxes else None
+        for box in self.placed_boxes:
+            if box.h + box.y > top_box.h + top_box.y:
+                top_box = box
+        return top_box
+
+    def placeBoxesBottomLeftFit(self, boxes):
+        if self.optimaze: boxes = sortBy(boxes, ('w','h'))
+        for box in boxes:
             self.placed_boxes.append(self.placeBoxBottomLeftFit(box))
 
     def placeBoxBottomLeftFit(self, box):
-        self.holes = sorted(self.holes, key=lambda x: (x[1], x[0]))
+        if self.optimaze: self.holes = sorted(self.holes, key=lambda x: (x[1], x[0]))
         for i in range(len(self.holes)):
             box.position = self.holes[i]
 
@@ -70,16 +79,22 @@ class Store:
             return False
 
         # box nie moze byc w placed_boxes
-        for b in self.placed_boxes:
-            if self.checkIntersection(box, b):
-                return False
+        if self.findIntersections(box):
+            return False
         return True
 
+    def findIntersections(self, box):
+        intersections = []
+        for b in self.placed_boxes:
+            if self.checkIntersection(box, b):
+                intersections.append(b)
+        return intersections
+
     def checkIntersection(self, box_one, box_two):
-        if not (box_one.x >= box_two.x + box_two.w + self.d or
-           box_one.x + box_one.w + self.d <= box_two.x or
-           box_one.y >= box_two.y + box_two.h + self.d or 
-           box_one.y + box_one.h + self.d <= box_two.y):
+        if box_one.x < box_two.x + box_two.w + self.d and \
+           box_one.x + box_one.w + self.d > box_two.x and \
+           box_one.y < box_two.y + box_two.h + self.d and \
+           box_one.y + box_one.h + self.d > box_two.y:
             return True
 
         return False
@@ -92,6 +107,12 @@ class Box:
         self.w = box_tuple[2]
         self.h = box_tuple[3]
         self.v = self.h * self.w
+
+    def itsMe(self, box):
+        return self == box
+
+    def __eq__(self, other):
+        return self.getTuple() == other.getTuple()
 
     def getTuple(self):
         return (self.x, self.y, self.h, self.w)
