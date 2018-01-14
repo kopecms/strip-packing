@@ -29,13 +29,6 @@ def showResults(store_list=[Store(width=10, height=10, boxes=boxes_test)]):
         line, = ax.plot(x, y, 'go-')
 
         # draw boxes
-        for i in range(len(store.placed_boxes)):
-            for j in range(i+1,len(store.placed_boxes)):
-                if store.placed_boxes[i].x == store.placed_boxes[j].x and \
-                    store.placed_boxes[i].y == store.placed_boxes[j].y:
-                        print(c)
-                        print("KUUUUUUUURWAAA")
-
         for box in store.placed_boxes:
             path_data = [
                 (Path.MOVETO, (box.x + c, box.y)),
@@ -49,9 +42,9 @@ def showResults(store_list=[Store(width=10, height=10, boxes=boxes_test)]):
             x, y = zip(*path.vertices)
             line, = ax.plot(x, y, 'go-')
 
-        # draw holes
-        for hole in removeNotNeededHoles(store.boxes, store.holes):
-            ax.plot(hole[0] + c, hole[1], 'o')
+        # draw holes for debug
+        #for hole in removeNotNeededHoles(store.boxes, store.holes):
+        #    ax.plot(hole[0] + c, hole[1], 'o')
 
         c += store.width + 10
 

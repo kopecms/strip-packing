@@ -10,7 +10,7 @@ class Store:
         self.boxes = boxes
         self.placed_boxes = []
         self.height = height
-        # jesli True to stosowane sa optymalizacje
+        # jesli True to stosowane sa optymalizacje dla stanu poczatkowego
         self.optimaze = False
 
         """

@@ -86,6 +86,3 @@ class TestStore(TestCase):
         self.store.placed_boxes = [Box((5,0,1,1)), Box((11,3,2,4)), Box((5,0,2,1))]
         top_box = self.store.getTopBox()
         self.assertTrue(top_box == Box((11,3,2,4)))
-
-class TestUtils(TestCase):
-    pass

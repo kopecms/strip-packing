@@ -9,7 +9,7 @@ def beam_search( origin, max_iterations=100, max_children=50 ):
 
     init_node = Node(origin)
     node_list = [ (-1,init_node) ]
-    current_node = Node(init_node) #init for while loop
+    current_node = Node(init_node)
     current_H = current_node.H
     iteration = 0
     while current_H <= current_node.H and iteration < max_iterations:
@@ -18,11 +18,10 @@ def beam_search( origin, max_iterations=100, max_children=50 ):
         _,current_node = heapq.heappop( node_list ) # select the best node.
         for t in map( heuristic, current_node.generate_children()):
             heapq.heappush( node_list, t )
-        #node_list = node_list[:max_children]
-    #endwhile
+        node_list = node_list[:max_children]
+
     print("Beam search iteration = {}, H = {}".format(max_iterations, current_node.H))
     return current_node.store
-# end beam_search
 
 
 

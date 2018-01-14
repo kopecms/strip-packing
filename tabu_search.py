@@ -1,11 +1,13 @@
 import heapq
 import random
 from algorithm import Node, heuristic
+
+
 def beam_search_tabu( origin, tabu_size=5, max_iterations=1000, max_children=20):
 
     init_node = Node(origin)
     node_list = [ (-1,init_node) ]
-    current_node = Node(init_node) #init for while loop
+    current_node = Node(init_node)
     tabu_set = []
 
     iteration = 0
@@ -20,7 +22,7 @@ def beam_search_tabu( origin, tabu_size=5, max_iterations=1000, max_children=20)
             if hash(node) not in tabu_set:
                 heapq.heappush( node_list, ( heuristic( node ), node))
         node_list = node_list[:max_children]
-    #endwhile
+
 
     print("Tabu search for {} iteration found H equal to {}".format(max_iterations, current_node.H))
     return current_node.store

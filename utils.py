@@ -8,7 +8,6 @@ def genarateBoxTuples(n, w_max = 10, h_max = 10):
     return [(0, 0, randint(1, w_max), randint(1, h_max)) for a in range(n)]
 
 
-# nie wiem czemu nie usuwa wszystkich dziur ktore leza w krawedzi pudelka
 def removeNotNeededHoles(boxes, holes):
     for box in boxes:
         for hole in holes:

@@ -2,28 +2,6 @@ from copy import deepcopy
 from store import Store
 from utils import removeNotNeededHoles
 
-# TODO
-# ogarnac o co chodzi na stronie 65 z tymi warunkami
-
-
-# funkcja ewaluacyjna f(s) s - > stan
-
-# boxes w danym stanie,
-# H najlepsza znaleziona wysokosc
-# pH wspolczynnik do ustalenia
-
-H_global = 0
-
-def fitnessFunction(boxes, H, pH):
-    rectangles = [box for box in boxes if box.y + box.y > H - pH]
-    if not rectangles:
-        return 0
-    else:
-        return sum(box.x*(box.y + box.h - H + pH))
-
-# albo Node
-
-
 class Node:
     def __init__(self, store):
         self.H = 0
@@ -60,6 +38,7 @@ class Node:
             store_copy.placed_boxes.remove(box)
             box_itersections = store_copy.findIntersections(box)
             store_copy.placed_boxes.append(box)
+
             for b in box_itersections:
                 store_copy.holes.append((b.x, b.y))
                 hole_right = (b.x + b.w + self.store.d, b.y)
@@ -73,15 +52,10 @@ class Node:
             childeren.append(Node(store_copy))
         return childeren
 
-    # pudelka powyzej limitu H - pH
-    def boxesOverHeightLimit(boxes, H, pH):
-        return [box for box in boxes if box.y + box.y > H - pH]
-#end Node
-
     def __hash__(self):
         return hash(str(self))
 
 def heuristic( node, goal=20 ):
     node.heuristic()
-    node.h_score = abs(node.H-goal) # Evaluate the node
+    node.h_score = abs(node.H-goal)
     return (node.h_score, node)
