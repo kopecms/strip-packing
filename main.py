@@ -20,11 +20,13 @@ def main(argv):
         if len(opts) < 1:
             print('No args provided. Run again with -h option to see how to use. Running program with default values')
     except getopt.GetoptError:
-        print('test.py -width <magazine width> -offset <offset between boxes> -boxes <number of boxes> -iterations <number of iterations>')
+        print('test.py -width <magazine width> -offset <offset between boxes> -boxes <number of boxes> -iterations '
+              '<number of iterations>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('test.py -width <magazine width> -offset <offset between boxes> -boxes <number of boxes> -iterations <number of iterations>')
+            print('test.py -width <magazine width> -offset <offset between boxes> -boxes <number of boxes> '
+                  '-iterations <number of iterations>')
             sys.exit()
         elif opt in ("-w", "--width"):
             width = int(arg)
