@@ -12,7 +12,7 @@ class Store:
         self.height = height
         # jesli True to stosowane sa optymalizacje dla stanu poczatkowego
         self.optimaze = False
-
+        self.plot = []
         """
         pomysl mam taki ze do holes trafiaja zawsze po wsaddzeniu boxa:
         (box.x, box.y + box.h + d), (box.x + box.w + d, box.y)
