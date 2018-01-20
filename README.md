@@ -1,3 +1,5 @@
+Requires python 3.5
+
 setup:
 
     virtualenv alhe
